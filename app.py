@@ -111,5 +111,25 @@ class FoodLabelHandler(Resource):
 api.add_resource(FoodLabelHandler, '/api/food/<string:label>')
 
 
+foodLogParser = reqparse.RequestParser()
+foodLogParser.add_argument("name")
+foodLogParser.add_argument("health_value")
+
+class FoodLogHandler(Resource):
+    def get(self, user_id):
+        log = FoodLog.query.filter_by(user_id=user_id).all()
+        return jsonify(food_log=[f.serialize() for f in log])
+
+    def post(self, user_id):
+        args = foodLogParser.parse_args()
+        log_entry = FoodLog(name=args['name'], health_value=args['health_value'], user_id=user_id)
+        db.session.add(log_entry)
+        db.session.commit()
+        return log_entry.id
+
+
+api.add_resource(FoodLogHandler, '/api/food/log/<int:user_id>')
+
+
 if __name__ == '__main__':
     manager.run()
