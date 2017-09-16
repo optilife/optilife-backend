@@ -95,8 +95,7 @@ class FoodLog(CRUDMixin, db.Model):
                     id=id,
                     name=name,
                     health_value=health_value,
-                    user_id=user_id,
-                    calories=calories
+                    user_id=user_id
                 )
 
 
