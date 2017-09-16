@@ -1,5 +1,6 @@
 from . import db
 
+
 class FoodLog(db.Model):
     __tablename__ = "foodlogs"
     id = db.Column(db.Integer, primary_key=True, nullable=False)
@@ -20,7 +21,6 @@ class User(db.Model):
     weight = db.Column(db.Float, nullable=False)
     gender = db.Column(db.String(1), nullable=False)
     foodlogs = db.relationship('FoodLog', backref='role')
-
 
     def __repr__(self):
         return '<User %r>' % self.username

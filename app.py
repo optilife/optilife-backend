@@ -3,6 +3,7 @@ import os
 from data import create_app, db
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
+from core import get_food_log
 
 app = create_app('default')
 manager = Manager(app)
@@ -20,7 +21,7 @@ def deploy():
 
 @app.route("/")
 def hi():
-    return "Hi"
+    return get_food_log()
 
 
 if __name__ == '__main__':
