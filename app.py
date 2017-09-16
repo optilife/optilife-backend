@@ -5,6 +5,7 @@ from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 from data.entities import User, FoodLog
 from flask_restful import Resource, Api, reqparse
+from core import get_food_labels, get_food_health_value
 
 app = create_app('default')
 manager = Manager(app)
@@ -59,6 +60,8 @@ class UserHandler(Resource):
         return True
 
 
+api.add_resource(UserHandler, '/api/users/<int:user_id>')
+
 userLoginParser = reqparse.RequestParser()
 userLoginParser.add_argument('username')
 userLoginParser.add_argument('password')
@@ -72,9 +75,16 @@ class UserLoginHandler(Resource):
         return User.query.filter_by(username=username, password_hash=password_hash).count() == 1
 
 
-
-api.add_resource(UserHandler, '/api/users/<int:user_id>')
 api.add_resource(UserLoginHandler, '/api/users/login')
+
+
+class FoodHandler(Resource):
+    # def post(self):
+    def get(self, label):
+        return get_food_health_value(label)
+
+
+api.add_resource(FoodHandler, '/api/food/<string:label>')
 
 
 if __name__ == '__main__':
