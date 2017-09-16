@@ -85,7 +85,6 @@ class User(CRUDMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
-
     @staticmethod
     def insert_default_users():
         with open(os.path.join(dir_path, 'default_data/user'), 'r') as f:
@@ -101,13 +100,12 @@ class User(CRUDMixin, db.Model):
                     gender=gender
                     )
 
-
-def serialize(self):
-    return {
-        'id': self.id,
-        'username': self.name,
-        'age': self.age,
-        'height': self.height,
-        'weight': self.weight,
-        'gender': self.gender
-    }
+    def serialize(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'age': self.age,
+            'height': self.height,
+            'weight': self.weight,
+            'gender': self.gender
+        }
