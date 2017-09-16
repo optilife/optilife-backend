@@ -67,7 +67,7 @@ class CRUDMixin(object):
 class FoodLog(CRUDMixin, db.Model):
     __tablename__ = "foodlogs"
     id = db.Column(db.Integer, primary_key=True, nullable=False)
-    name = db.Column(db.String(128), unique=True, index=True, nullable=False)
+    name = db.Column(db.String(128), index=True, nullable=False)
     health_value = db.Column(db.Float, nullable=False)
     timestamp = db.Column(db.Date, default=random_date)
     price = db.Column(db.Float, default=random_price)

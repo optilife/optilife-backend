@@ -15,10 +15,11 @@ def get_food_health_value(label):
     return nutritionix_wrapper(label)
 
 
-def save_food_log_entry(user, name, health_value):
-    food = FoodLog(name=name, health_value=health_value, user_id=user.id)
+def save_food_log_entry(user_id, name, health_value):
+    food = FoodLog(name=name, health_value=health_value, user_id=user_id)
     db.session.add(food)
     db.session.commit()
+    return food.id
 
 
 def get_food_log(user):
