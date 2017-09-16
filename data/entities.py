@@ -1,5 +1,6 @@
 import datetime
 import os
+import random
 
 from . import db
 
@@ -13,6 +14,9 @@ def str_to_bool(s):
     elif s == 'False':
         return False
 
+
+def random_price():
+    return round(random.uniform(0.5, 6.5) * 20) / 20
 
 class CRUDMixin(object):
     __table_args__ = {'extend_existing': True}
@@ -52,7 +56,9 @@ class FoodLog(CRUDMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(128), unique=True, index=True, nullable=False)
     health_value = db.Column(db.Float, nullable=False)
-    timestamp = db.Column(db.Integer, default=datetime.datetime.now().timestamp())
+    timestamp = db.Column(db.Date, default=datetime.datetime.now().date())
+    price = db.Column(db.Float, default=random_price())
+    calories = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):
@@ -73,12 +79,13 @@ class FoodLog(CRUDMixin, db.Model):
         with open(os.path.join(dir_path, 'default_data/foodlog'), 'r') as f:
             for line in f.readlines():
                 line = line.strip('\n')
-                id, name, health_value, user_id = line.split(',')
+                id, name, health_value, user_id, calories = line.split(',')
                 FoodLog.create(
                     id=id,
                     name=name,
                     health_value=health_value,
-                    user_id=user_id
+                    user_id=user_id,
+                    calories=calories
                 )
 
 
@@ -93,6 +100,7 @@ class User(CRUDMixin, db.Model):
     weight = db.Column(db.Float, nullable=False)
     gender = db.Column(db.String(1), nullable=False)
     vegetarian = db.Column(db.Boolean, default=False,)
+    monthly_budget = db.Column(db.Float, nullable=False)
     foodlogs = db.relationship('FoodLog', backref='role')
 
     def __repr__(self):
@@ -111,7 +119,7 @@ class User(CRUDMixin, db.Model):
         with open(os.path.join(dir_path, 'default_data/user'), 'r') as f:
             for line in f.readlines():
                 line = line.strip('\n')
-                id, name, email, password, age, height, weight, gender, vegetarian = line.split(',')
+                id, name, email, password, age, height, weight, gender, vegetarian, monthly_budget = line.split(',')
                 User.create(
                     id=id,
                     username=name,
@@ -121,7 +129,8 @@ class User(CRUDMixin, db.Model):
                     height=height,
                     weight=weight,
                     gender=gender,
-                    vegetarian=str_to_bool(vegetarian)
+                    vegetarian=str_to_bool(vegetarian),
+                    monthly_budget= monthly_budget
                     )
 
 
@@ -135,5 +144,6 @@ class User(CRUDMixin, db.Model):
             'height': self.height,
             'weight': self.weight,
             'gender': self.gender,
-            'vegeterian': self.vegetarian
+            'vegeterian': self.vegetarian,
+            'monthly_budget': self.monthly_budget
         }
