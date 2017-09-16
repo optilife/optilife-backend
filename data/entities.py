@@ -18,6 +18,13 @@ def str_to_bool(s):
 def random_price():
     return round(random.uniform(0.5, 6.5) * 20) / 20
 
+
+def random_date():
+    year = 2017
+    month = random.choice(range(8,10))
+    day = random.choice(range(1,31))
+    return datetime.datetime(year, month, day).date()
+
 class CRUDMixin(object):
     __table_args__ = {'extend_existing': True}
 
@@ -56,8 +63,8 @@ class FoodLog(CRUDMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(128), unique=True, index=True, nullable=False)
     health_value = db.Column(db.Float, nullable=False)
-    timestamp = db.Column(db.Date, default=datetime.datetime.now().date())
-    price = db.Column(db.Float, default=random_price())
+    timestamp = db.Column(db.Date, default=random_date)
+    price = db.Column(db.Float, default=random_price)
     calories = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
