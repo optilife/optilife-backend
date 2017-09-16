@@ -1,3 +1,4 @@
-1,Peter,peter@mail.com,password,42,1.8,80.0,m,False
-2,Anna,anna@mail.com,password,28,1.62,59.2,f,True
-3,Moritz,moritz@mail.com,password,57,1.78,78.5,m,False
+1,Luca,luca@mail.com,password,42,1.8,100.0,m,False
+2,Arik,arik@mail.com,password,28,1.62,59.2,f,True
+3,David,david@mail.com,password,57,1.78,78.5,m,False
+4,Axel,axel@mail.com,password,25,2.01,72.2,m,False
