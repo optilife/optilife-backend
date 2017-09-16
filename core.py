@@ -31,4 +31,8 @@ def get_health_index(user):
     return round(health_index[0] * 10, 1)
 
 
+def get_last_month_food(user):
+    print(db.session.query)
+
+
 

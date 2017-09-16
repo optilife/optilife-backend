@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from . import db
@@ -51,6 +52,7 @@ class FoodLog(CRUDMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     name = db.Column(db.String(128), unique=True, index=True, nullable=False)
     health_value = db.Column(db.Float, nullable=False)
+    timestamp = db.Column(db.Integer, default=datetime.datetime.now().timestamp())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):
@@ -61,7 +63,8 @@ class FoodLog(CRUDMixin, db.Model):
             'id': self.id,
             'name': self.name,
             'health_value': self.health_value,
-            'user_id': self.user_id
+            'user_id': self.user_id,
+            'timestamp': self.timestamp
         }
 
 
