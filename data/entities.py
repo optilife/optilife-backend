@@ -49,6 +49,14 @@ class FoodLog(CRUDMixin, db.Model):
     def __repr__(self):
         return '<FoodLog %r>' % self.name
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'health_value': self.health_value,
+            'user_id': self.user_id
+        }
+
 
     @staticmethod
     def insert_default_foodlogs():
@@ -77,6 +85,7 @@ class User(CRUDMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
+<<<<<<< HEAD
 
     @staticmethod
     def insert_default_users():
@@ -92,3 +101,14 @@ class User(CRUDMixin, db.Model):
                     weight=weight,
                     gender=gender
                     )
+=======
+    def serialize(self):
+        return {
+            'id': self.id,
+            'username': self.name,
+            'age': self.age,
+            'height': self.height,
+            'weight': self.weight,
+            'gender': self.gender
+        }
+>>>>>>> origin/master

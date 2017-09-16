@@ -27,8 +27,7 @@ def deploy():
 
 @app.route("/")
 def hi():
-    simpleuser = User.query.first()
-    return get_food_log(simpleuser)[0].name
+    return 'hi'
 
 
 if __name__ == '__main__':
