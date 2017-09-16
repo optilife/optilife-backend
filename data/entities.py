@@ -2,6 +2,8 @@ import datetime
 import os
 import random
 
+from sqlalchemy.ext.hybrid import hybrid_property
+
 from . import db
 
 
@@ -124,6 +126,13 @@ class User(CRUDMixin, db.Model):
     def password(self, password):
         self.password_hash = password
 
+    @hybrid_property
+    def actual_budget(self):
+        costs = 0
+        for foodlog in self.foodlogs:
+            costs = costs + foodlog.price
+        return self.monthly_budget - costs
+
     @staticmethod
     def insert_default_users():
         with open(os.path.join(dir_path, 'default_data/user'), 'r') as f:
@@ -155,5 +164,6 @@ class User(CRUDMixin, db.Model):
             'weight': self.weight,
             'gender': self.gender,
             'vegeterian': self.vegetarian,
-            'monthly_budget': self.monthly_budget
+            'monthly_budget': self.monthly_budget,
+            'actual_budget': self.actual_budget
         }
