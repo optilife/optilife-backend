@@ -7,7 +7,7 @@ from flask_migrate import Migrate, MigrateCommand
 from data.entities import User, FoodLog
 from flask_restful import Resource, Api, reqparse
 from flask import jsonify
-from core import get_food_labels, get_food_health_value, get_health_index
+from core import get_food_labels, get_food_health_value, get_health_index, save_food_log_entry
 import base64
 from sqlalchemy.sql import func
 
@@ -116,8 +116,8 @@ api.add_resource(FoodLabelHandler, '/api/food/<string:label>')
 
 
 foodLogParser = reqparse.RequestParser()
-foodLogParser.add_argument("name")
-foodLogParser.add_argument("health_value")
+foodLogParser.add_argument("label")
+
 
 class FoodLogHandler(Resource):
     def get(self, user_id):
@@ -131,14 +131,13 @@ class FoodLogHandler(Resource):
 
     def post(self, user_id):
         args = foodLogParser.parse_args()
-        log_entry = FoodLog(name=args['name'], health_value=args['health_value'], user_id=user_id)
-        db.session.add(log_entry)
-        db.session.commit()
-        return log_entry.id
+        label = args["label"]
+        health_value = get_food_health_value(label)
+        return save_food_log_entry(name=label, health_value=health_value, user_id=user_id)
 
     def serialize_log(self, previous, current):
         data = {'previous': [f.serialize() for f in previous], 'current': [f.serialize() for f in current]}
-        return data;
+        return data
 
 
 
