@@ -4,8 +4,9 @@ from data.entities import User, FoodLog
 from flask import jsonify
 
 
-def get_food_labels(img_path):
-    return get_labels_from_image(img_path)
+def get_food_labels(image):
+    labels = get_labels_from_image(image)
+    return jsonify(foodlabels=[l.description for l in labels])
 
 
 def get_food_health_value(label):

@@ -5,7 +5,9 @@ from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 from data.entities import User, FoodLog
 from flask_restful import Resource, Api, reqparse
+from flask import jsonify
 from core import get_food_labels, get_food_health_value
+import base64
 
 app = create_app('default')
 manager = Manager(app)
@@ -66,6 +68,7 @@ userLoginParser = reqparse.RequestParser()
 userLoginParser.add_argument('username')
 userLoginParser.add_argument('password')
 
+
 class UserLoginHandler(Resource):
     def post(self):
         args = userLoginParser.parse_args()
@@ -77,14 +80,26 @@ class UserLoginHandler(Resource):
 
 api.add_resource(UserLoginHandler, '/api/users/login')
 
+foodParser = reqparse.RequestParser()
+foodParser.add_argument("image")
+
 
 class FoodHandler(Resource):
-    # def post(self):
+    def post(self):
+        args = foodParser.parse_args()
+        encoded_image = base64.b64decode(args['image'])
+        return get_food_labels(encoded_image)
+
+
+api.add_resource(FoodHandler, '/api/food/')
+
+
+class FoodLabelHandler(Resource):
     def get(self, label):
         return get_food_health_value(label)
 
 
-api.add_resource(FoodHandler, '/api/food/<string:label>')
+api.add_resource(FoodLabelHandler, '/api/food/<string:label>')
 
 
 if __name__ == '__main__':
