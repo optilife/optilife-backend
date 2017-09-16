@@ -1,4 +1,15 @@
-from app import db
+from app import app
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy(app)
+
+
+def setup():
+    engine = db.create_engine('mysql+pymysql://root:@localhost')
+    engine.execute("CREATE DATABASE IF NOT EXISTS optilife")
+    engine.execute("USE optilife")
+    db.drop_all()
+    db.create_all()
 
 
 class User(db.Model):
