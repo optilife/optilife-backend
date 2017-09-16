@@ -9,7 +9,7 @@ class FoodLog(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):
-        return '<FoodLog %r>' % self.name + " " + str(self.health_value)
+        return '<FoodLog %r>' % self.name
 
 
 class User(db.Model):

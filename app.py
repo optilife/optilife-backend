@@ -4,6 +4,7 @@ from data import create_app, db
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 from core import get_food_log
+from data.entities import User
 
 app = create_app('default')
 manager = Manager(app)
@@ -21,7 +22,8 @@ def deploy():
 
 @app.route("/")
 def hi():
-    return get_food_log()
+    simpleuser = User.query.first()
+    return get_food_log(simpleuser)[0].name
 
 
 if __name__ == '__main__':
