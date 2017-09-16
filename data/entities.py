@@ -90,7 +90,7 @@ class FoodLog(CRUDMixin, db.Model):
         with open(os.path.join(dir_path, 'default_data/foodlog'), 'r') as f:
             for line in f.readlines():
                 line = line.strip('\n')
-                id, name, health_value, user_id, calories = line.split(',')
+                id, name, health_value, user_id = line.split(',')
                 FoodLog.create(
                     id=id,
                     name=name,
