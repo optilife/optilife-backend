@@ -74,8 +74,11 @@ class UserLoginHandler(Resource):
         args = userLoginParser.parse_args()
         username = args['username']
         password_hash = args['password']
-
-        return User.query.filter_by(username=username, password_hash=password_hash).count() == 1
+        usr = User.query.filter_by(username=username, password_hash=password_hash).first()
+        if usr != None:
+            return usr.id
+        else:
+            return False
 
 
 api.add_resource(UserLoginHandler, '/api/users/login')
