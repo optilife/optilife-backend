@@ -30,10 +30,14 @@ def deploy():
 userParser = reqparse.RequestParser()
 userParser.add_argument('id')
 userParser.add_argument('username')
+userParser.add_argument('mail')
+userParser.add_argument('password')
 userParser.add_argument('age')
 userParser.add_argument('height')
 userParser.add_argument('weight')
 userParser.add_argument('gender')
+userParser.add_argument('vegeterian')
+
 
 class UserHandler(Resource):
     def get(self, user_id):
@@ -43,15 +47,34 @@ class UserHandler(Resource):
         args = userParser.parse_args()
         usr = User.query.filter_by(id=user_id).first()
         usr.username = args['username']
+        usr.mail = args['mail']
+        usr.password_hash = args['password']
         usr.age = args['age']
         usr.height = args['height']
         usr.weight = args['weight']
         usr.gender = args['gender']
+        usr.vegeterian = args['vegeterian']
         db.session.add(usr)
         db.session.commit()
+        return True
+
+
+userLoginParser = reqparse.RequestParser()
+userLoginParser.add_argument('username')
+userLoginParser.add_argument('password')
+
+class UserLoginHandler(Resource):
+    def post(self):
+        args = userLoginParser.parse_args()
+        username = args['username']
+        password_hash = args['password']
+
+        return User.query.filter_by(username=username, password_hash=password_hash).count() == 1
+
 
 
 api.add_resource(UserHandler, '/api/users/<int:user_id>')
+api.add_resource(UserLoginHandler, '/api/users/login')
 
 
 if __name__ == '__main__':

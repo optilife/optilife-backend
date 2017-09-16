@@ -1,7 +1,5 @@
 import os
 
-from werkzeug.security import generate_password_hash
-
 from . import db
 
 
@@ -103,7 +101,7 @@ class User(CRUDMixin, db.Model):
 
     @password.setter
     def password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = password
 
     @staticmethod
     def insert_default_users():
