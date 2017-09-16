@@ -85,7 +85,6 @@ class User(CRUDMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
-<<<<<<< HEAD
 
     @staticmethod
     def insert_default_users():
@@ -101,14 +100,14 @@ class User(CRUDMixin, db.Model):
                     weight=weight,
                     gender=gender
                     )
-=======
-    def serialize(self):
-        return {
-            'id': self.id,
-            'username': self.name,
-            'age': self.age,
-            'height': self.height,
-            'weight': self.weight,
-            'gender': self.gender
-        }
->>>>>>> origin/master
+
+
+def serialize(self):
+    return {
+        'id': self.id,
+        'username': self.name,
+        'age': self.age,
+        'height': self.height,
+        'weight': self.weight,
+        'gender': self.gender
+    }
