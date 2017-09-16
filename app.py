@@ -1,55 +1,27 @@
 import os
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(basedir, '.env'))
+from data import create_app, db
+from flask_script import Manager, Shell
+from flask_migrate import Migrate, MigrateCommand
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DEV_DATABASE_URL')
-app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
+app = create_app('default')
+manager = Manager(app)
+migrate = Migrate(app, db)
 
-db = SQLAlchemy(app)
+manager.add_command('db', MigrateCommand)
 
+@manager.command
+def deploy():
+    """Run deployment tasks."""
+    from flask_migrate import upgrade
 
-port = int(os.getenv('PORT', '3000'))
+    # migrate database to latest revision
+    upgrade()
 
-# The database classes and functions would actually belong into a separate file,
-# but this leads to circular references, we cannot resolve with our Python knowledge.
-# And this is a hackathon anyways...
-
-
-def create_db():
-    engine = db.create_engine('mysql+pymysql://root:@localhost')
-    engine.execute("CREATE DATABASE IF NOT EXISTS optilife")
-    engine.execute("USE optilife")
-    db.drop_all()
-    db.create_all()
-
-
-class User(db.Model):
-    __tablename__ = "users"
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    username = db.Column(db.String(128), unique=True, index=True, nullable=False)
-    age = db.Column(db.Integer, nullable=False)
-    height = db.Column(db.Float, nullable=False)
-    weight = db.Column(db.Float, nullable=False)
-
-    def __repr__(self):
-        return '<User %r>' % self.username
-
-
-@app.route('/')
-def hello_world():
-    return
-
-
-@app.route('/setup_db')
-def setup_db():
-    create_db()
-    return
+@app.route("/")
+def hi():
+    return "Hi"
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=port)
+    manager.run()

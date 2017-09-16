@@ -9,6 +9,8 @@ reated by https://www.gitignore.io/api/python,intellij
 .idea/**/tasks.xml
 .idea/dictionaries
 
+/migrations/
+
 # Sensitive or high-churn files:
 .idea/**/dataSources/
 .idea/**/dataSources.ids
