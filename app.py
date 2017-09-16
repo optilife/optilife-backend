@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timedelta
 
 from data import create_app, db
 from flask_script import Manager, Shell
@@ -120,8 +121,13 @@ foodLogParser.add_argument("health_value")
 
 class FoodLogHandler(Resource):
     def get(self, user_id):
-        log = FoodLog.query.filter_by(user_id=user_id).all()
-        return jsonify(food_log=[f.serialize() for f in log])
+        previous = FoodLog.query.filter(FoodLog.user_id == user_id,
+                                        FoodLog.timestamp >= datetime.now() - timedelta(days=60),
+                                       FoodLog.timestamp <= datetime.now() - timedelta(days=30)).all()
+        current = FoodLog.query.filter(FoodLog.user_id == user_id,
+                                       FoodLog.timestamp >= datetime.now() - timedelta(days=30),
+                                        FoodLog.timestamp <= datetime.now()).all()
+        return jsonify(self.serialize_log(previous, current))
 
     def post(self, user_id):
         args = foodLogParser.parse_args()
@@ -129,6 +135,11 @@ class FoodLogHandler(Resource):
         db.session.add(log_entry)
         db.session.commit()
         return log_entry.id
+
+    def serialize_log(self, previous, current):
+        data = {'previous': [f.serialize() for f in previous], 'current': [f.serialize() for f in current]}
+        return data;
+
 
 
 api.add_resource(FoodLogHandler, '/api/food/log/<int:user_id>')
