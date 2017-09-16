@@ -4,7 +4,7 @@ from data import create_app, db
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 from core import get_food_log
-from data.entities import User
+from data.entities import User, FoodLog
 
 app = create_app('default')
 manager = Manager(app)
@@ -19,6 +19,11 @@ def deploy():
 
     # migrate database to latest revision
     upgrade()
+
+    #insert default data
+    User.insert_default_users()
+    FoodLog.insert_default_foodlogs()
+
 
 @app.route("/")
 def hi():
