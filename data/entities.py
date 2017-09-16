@@ -120,8 +120,11 @@ class User(CRUDMixin, db.Model):
         return {
             'id': self.id,
             'username': self.username,
+            'mail': self.mail,
+            'password_hash': self.password_hash,
             'age': self.age,
             'height': self.height,
             'weight': self.weight,
-            'gender': self.gender
+            'gender': self.gender,
+            'vegeterian': self.vegetarian
         }
