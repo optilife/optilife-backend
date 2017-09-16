@@ -1,3 +1,6 @@
 [submodule "Vision"]
 	path = Vision
 	url = git@github.com:optilife/Vision.git
+[submodule "optilife-frontend"]
+	path = optilife-frontend
+	url = git@github.com:optilife/optilife-frontend.git
