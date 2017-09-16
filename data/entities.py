@@ -8,6 +8,13 @@ from . import db
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
+def str_to_bool(s):
+    if s == 'True':
+        return True
+    elif s == 'False':
+        return False
+
+
 class CRUDMixin(object):
     __table_args__ = {'extend_existing': True}
 
@@ -113,8 +120,9 @@ class User(CRUDMixin, db.Model):
                     height=height,
                     weight=weight,
                     gender=gender,
-                    vegetarian=vegetarian
+                    vegetarian=str_to_bool(vegetarian)
                     )
+
 
     def serialize(self):
         return {
