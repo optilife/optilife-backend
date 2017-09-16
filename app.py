@@ -6,8 +6,9 @@ from flask_migrate import Migrate, MigrateCommand
 from data.entities import User, FoodLog
 from flask_restful import Resource, Api, reqparse
 from flask import jsonify
-from core import get_food_labels, get_food_health_value
+from core import get_food_labels, get_food_health_value, get_health_index
 import base64
+from sqlalchemy.sql import func
 
 app = create_app('default')
 manager = Manager(app)
@@ -74,17 +75,22 @@ class UserLoginHandler(Resource):
         args = userLoginParser.parse_args()
         username = args['username']
         password_hash = args['password']
-        usr = User.query.filter_by(username=username, password_hash=password_hash).first()
-        if usr != None:
-            return usr.id
-        else:
-            return False
+
+        return User.query.filter_by(username=username, password_hash=password_hash).count() == 1
 
 
 api.add_resource(UserLoginHandler, '/api/users/login')
 
 foodParser = reqparse.RequestParser()
 foodParser.add_argument("image")
+
+
+class HealthIndexHandler(Resource):
+    def get(self, user_id):
+        return jsonify(get_health_index(user_id))
+
+
+api.add_resource(HealthIndexHandler, '/api/users/health-index/<int:user_id>')
 
 
 class FoodHandler(Resource):
