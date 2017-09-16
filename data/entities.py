@@ -116,13 +116,12 @@ class User(CRUDMixin, db.Model):
                     vegetarian=vegetarian
                     )
 
-
-def serialize(self):
-    return {
-        'id': self.id,
-        'username': self.name,
-        'age': self.age,
-        'height': self.height,
-        'weight': self.weight,
-        'gender': self.gender
-    }
+    def serialize(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'age': self.age,
+            'height': self.height,
+            'weight': self.weight,
+            'gender': self.gender
+        }

@@ -3,14 +3,16 @@ import os
 from data import create_app, db
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
-from core import get_food_log
 from data.entities import User, FoodLog
+from flask_restful import Resource, Api
 
 app = create_app('default')
 manager = Manager(app)
 migrate = Migrate(app, db)
 
 manager.add_command('db', MigrateCommand)
+
+api = Api(app)
 
 @manager.command
 def deploy():
@@ -25,9 +27,12 @@ def deploy():
     FoodLog.insert_default_foodlogs()
 
 
-@app.route("/")
-def hi():
-    return 'hi'
+class UserHandler(Resource):
+    def get(self, user_id):
+        return User.query.filter_by(id=user_id).first().serialize()
+
+
+api.add_resource(UserHandler, '/api/users/<int:user_id>')
 
 
 if __name__ == '__main__':
