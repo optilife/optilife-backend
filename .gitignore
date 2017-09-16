@@ -12,6 +12,7 @@ reated by https://www.gitignore.io/api/python,intellij
 /migrations/
 
 # Sensitive or high-churn files:
+.idea
 .idea/**/dataSources/
 .idea/**/dataSources.ids
 .idea/**/dataSources.xml
