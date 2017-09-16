@@ -1,0 +1,3 @@
+[submodule "Vision"]
+	path = Vision
+	url = git@github.com:optilife/Vision.git
