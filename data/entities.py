@@ -1,5 +1,7 @@
 import os
 
+from werkzeug.security import generate_password_hash
+
 from . import db
 
 
@@ -76,29 +78,42 @@ class User(CRUDMixin, db.Model):
     __tablename__ = "users"
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     username = db.Column(db.String(128), unique=True, index=True, nullable=False)
+    mail = db.Column(db.String(64), unique=True, nullable=False)
+    password_hash = db.Column(db.String(128), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     height = db.Column(db.Float, nullable=False)
     weight = db.Column(db.Float, nullable=False)
     gender = db.Column(db.String(1), nullable=False)
+    vegetarian = db.Column(db.Boolean, default=False,)
     foodlogs = db.relationship('FoodLog', backref='role')
 
     def __repr__(self):
         return '<User %r>' % self.username
 
+    @property
+    def password(self):
+        raise AttributeError('password is not readable')
+
+    @password.setter
+    def password(self, password):
+        self.password_hash = generate_password_hash(password)
 
     @staticmethod
     def insert_default_users():
         with open(os.path.join(dir_path, 'default_data/user'), 'r') as f:
             for line in f.readlines():
                 line = line.strip('\n')
-                id, name, age, height, weight, gender = line.split(',')
+                id, name, email, password, age, height, weight, gender, vegetarian = line.split(',')
                 User.create(
                     id=id,
                     username=name,
+                    mail=email,
+                    password=password,
                     age=age,
                     height=height,
                     weight=weight,
-                    gender=gender
+                    gender=gender,
+                    vegetarian=vegetarian
                     )
 
 
