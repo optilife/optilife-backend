@@ -4,7 +4,7 @@ from data import create_app, db
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 from data.entities import User, FoodLog
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 
 app = create_app('default')
 manager = Manager(app)
@@ -27,9 +27,28 @@ def deploy():
     FoodLog.insert_default_foodlogs()
 
 
+userParser = reqparse.RequestParser()
+userParser.add_argument('id')
+userParser.add_argument('username')
+userParser.add_argument('age')
+userParser.add_argument('height')
+userParser.add_argument('weight')
+userParser.add_argument('gender')
+
 class UserHandler(Resource):
     def get(self, user_id):
         return User.query.filter_by(id=user_id).first().serialize()
+
+    def put(self, user_id):
+        args = userParser.parse_args()
+        usr = User.query.filter_by(id=user_id).first()
+        usr.username = args['username']
+        usr.age = args['age']
+        usr.height = args['height']
+        usr.weight = args['weight']
+        usr.gender = args['gender']
+        db.session.add(usr)
+        db.session.commit()
 
 
 api.add_resource(UserHandler, '/api/users/<int:user_id>')
