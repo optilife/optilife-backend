@@ -1,8 +1,13 @@
 import os
 from flask import Flask
 
+from dotenv import load_dotenv
+
+basedir = os.path.abspath(os.path.dirname(__file__))
+load_dotenv(os.path.join(basedir, '.env'))
+
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@localhost/optilife'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DEV_DATABASE_URL')
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
 
