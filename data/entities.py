@@ -19,6 +19,10 @@ def random_price():
     return round(random.uniform(0.5, 6.5) * 20) / 20
 
 
+def random_calories():
+    return random.randint(40, 270)
+
+
 def random_date():
     year = 2017
     month = random.choice(range(8,10))
@@ -65,7 +69,7 @@ class FoodLog(CRUDMixin, db.Model):
     health_value = db.Column(db.Float, nullable=False)
     timestamp = db.Column(db.Date, default=random_date)
     price = db.Column(db.Float, default=random_price)
-    calories = db.Column(db.Integer)
+    calories = db.Column(db.Integer, default=random_calories)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def __repr__(self):
