@@ -1,13 +1,14 @@
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from dotenv import load_dotenv
+from dotenv import find_dotenv, load_dotenv
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(basedir, '.env'))
+load_dotenv(find_dotenv())
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DEV_DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DEV_DATABASE_SERVER_URL') + \
+                                        os.environ.get("DEV_DATABASE_NAME")
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
 
 db = SQLAlchemy(app)
@@ -21,7 +22,7 @@ port = int(os.getenv('PORT', '3000'))
 
 
 def create_db():
-    engine = db.create_engine('mysql+pymysql://root:@localhost')
+    engine = db.create_engine(os.environ.get('DEV_DATABASE_SERVER_URL'))
     engine.execute("CREATE DATABASE IF NOT EXISTS optilife")
     engine.execute("USE optilife")
     db.drop_all()
@@ -47,8 +48,14 @@ def hello_world():
 
 @app.route('/setup_db')
 def setup_db():
-    create_db()
-    return
+    msg = "DB dropped and recreated"
+
+    try:
+        create_db()
+    except Exception as ex:
+        msg = ex;
+
+    return msg
 
 
 if __name__ == '__main__':
