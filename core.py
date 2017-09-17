@@ -14,7 +14,10 @@ def get_food_labels(image):
 
 
 def get_food_health_value(label):
-    return nutritionix_wrapper(label)
+    try:
+        return nutritionix_wrapper(label)
+    except ZeroDivisionError:
+        return 0
 
 
 def save_food_log_entry(user_id, name, health_value):
