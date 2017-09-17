@@ -69,7 +69,7 @@ class FoodLog(CRUDMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     name = db.Column(db.String(128), index=True, nullable=False)
     health_value = db.Column(db.Float, nullable=False)
-    timestamp = db.Column(db.Date, default=random_date)
+    timestamp = db.Column(db.Date, default=datetime.datetime.now().date)
     price = db.Column(db.Float, default=random_price)
     calories = db.Column(db.Integer, default=random_calories)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
