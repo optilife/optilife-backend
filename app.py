@@ -102,10 +102,10 @@ class HealthIndexHandler(Resource):
         else:
             calories = 0.0
         return {
-            'health-index': get_health_index(user_id) if not None else 0.0,
+            'health-index': 100 - get_health_index(user_id) if not None else 0.0,
             'calories_today': calories,
-            'challenges_won': random.randint(0,9) if not None else 0.0,
-            'daily_goal':get_daily_goal(user_id) if not None else 0.0
+            'challenges_won': random.randint(20,100) if not None else 0.0,
+            'daily_goal': get_daily_goal(user_id) if not None else 0.0
         }
 
 

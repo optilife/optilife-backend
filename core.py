@@ -35,9 +35,9 @@ def get_health_index(user):
 
 
 def get_daily_calories(user):
-    return db.session.query(func.sum(FoodLog.calories)).filter(FoodLog.user_id == user,
+    ratio = 2000 / db.session.query(func.sum(FoodLog.calories)).filter(FoodLog.user_id == user,
                                                                FoodLog.timestamp == datetime.now().date()).first()[0]
-
+    return max(ratio, 1) * 100
 
 def get_daily_goal(user):
     cnt = db.session.query(func.count(FoodLog.user_id)).filter(FoodLog.user_id == user,
