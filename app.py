@@ -97,9 +97,13 @@ class HealthIndexHandler(Resource):
         return jsonify(self.serialize(user_id))
 
     def serialize(self, user_id):
+        if get_daily_calories(user_id) is not None:
+            calories = float(get_daily_calories(user_id))
+        else:
+            calories = 0.0
         return {
             'health-index': get_health_index(user_id) if not None else 0.0,
-            'calories_today': float(get_daily_calories(user_id)) if not None else 0.0,
+            'calories_today': calories,
             'challenges_won': random.randint(0,9) if not None else 0.0,
             'daily_goal':get_daily_goal(user_id) if not None else 0.0
         }
