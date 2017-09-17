@@ -1,4 +1,5 @@
 import os
+import random
 from datetime import datetime, timedelta
 
 from data import create_app, db
@@ -7,7 +8,8 @@ from flask_migrate import Migrate, MigrateCommand
 from data.entities import User, FoodLog
 from flask_restful import Resource, Api, reqparse
 from flask import jsonify
-from core import get_food_labels, get_food_health_value, get_health_index, save_food_log_entry
+from core import get_food_labels, get_food_health_value, get_health_index, save_food_log_entry, get_daily_calories, \
+    get_daily_goal
 import base64
 from sqlalchemy.sql import func
 
@@ -91,7 +93,16 @@ foodParser.add_argument("image")
 
 class HealthIndexHandler(Resource):
     def get(self, user_id):
-        return jsonify(get_health_index(user_id))
+        print(get_daily_calories(user_id))
+        return jsonify(self.serialize(user_id))
+
+    def serialize(self, user_id):
+        return {
+            'health-index': get_health_index(user_id),
+            'calories_today': float(get_daily_calories(user_id)),
+            'challenges_won': random.randint(0,9),
+            'daily_goal':get_daily_goal(user_id)
+        }
 
 
 api.add_resource(HealthIndexHandler, '/api/users/health-index/<int:user_id>')

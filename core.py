@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.sql import func
 
 from Vision.Helper import get_labels_from_image, nutritionix_wrapper
@@ -30,6 +32,24 @@ def get_food_log(user):
 def get_health_index(user):
     health_index = db.session.query(func.avg(FoodLog.health_value)).filter(FoodLog.user_id == user).first()
     return round(health_index[0] * 10, 1)
+
+
+def get_daily_calories(user):
+    return db.session.query(func.sum(FoodLog.calories)).filter(FoodLog.user_id == user,
+                                                               FoodLog.timestamp == datetime.now().date()).first()[0]
+
+
+def get_daily_goal(user):
+    cnt = db.session.query(func.count(FoodLog.user_id)).filter(FoodLog.user_id == user,
+                                                               FoodLog.timestamp == datetime.now().date()).first()[0]
+    if cnt == 0:
+        return 0
+    elif cnt == 1:
+        return 33
+    elif cnt == 2:
+        return 66
+    else:
+        return 100
 
 
 def get_last_month_food(user):
