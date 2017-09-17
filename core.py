@@ -34,7 +34,7 @@ def get_health_index(user):
     return round(health_index[0] * 10, 1)
 
 
-def get_daily_calories(user):
+def get_daily_calories_percentage(user):
     calorie_sum = db.session.query(func.sum(FoodLog.calories)).filter(FoodLog.user_id == user,
                                                                FoodLog.timestamp == datetime.now().date()).first()[0]
     if calorie_sum is None:
@@ -42,6 +42,16 @@ def get_daily_calories(user):
 
     ratio = calorie_sum / 2000
     return min(ratio, 1) * 100
+
+
+def get_daily_calories(user):
+    calorie_sum = db.session.query(func.sum(FoodLog.calories)).filter(FoodLog.user_id == user,
+                                                                FoodLog.timestamp == datetime.now().date()).first()[0]
+    if calorie_sum is None:
+        calorie_sum = 0
+
+    return calorie_sum
+
 
 def get_daily_goal(user):
     cnt = db.session.query(func.count(FoodLog.user_id)).filter(FoodLog.user_id == user,

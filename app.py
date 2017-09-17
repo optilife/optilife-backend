@@ -9,7 +9,7 @@ from data.entities import User, FoodLog
 from flask_restful import Resource, Api, reqparse
 from flask import jsonify
 from core import get_food_labels, get_food_health_value, get_health_index, save_food_log_entry, get_daily_calories, \
-    get_daily_goal
+    get_daily_goal, get_daily_calories_percentage
 import base64
 from sqlalchemy.sql import func
 
@@ -99,11 +99,14 @@ class HealthIndexHandler(Resource):
     def serialize(self, user_id):
         if get_daily_calories(user_id) is not None:
             calories = float(get_daily_calories(user_id))
+            calories_percentage = float(get_daily_calories_percentage(user_id))
         else:
             calories = 0.0
+            calories_percentage = 0.0
         return {
             'health-index': 100 - get_health_index(user_id) if not None else 0.0,
             'calories_today': calories,
+            'calories_today_percentage': calories_percentage,
             'challenges_won': random.randint(20,100) if not None else 0.0,
             'daily_goal': get_daily_goal(user_id) if not None else 0.0
         }
