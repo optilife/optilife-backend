@@ -25,7 +25,7 @@ Jinja2==2.9.6
 Mako==1.0.7
 MarkupSafe==1.0
 migrate==0.3.8
-numpy==1.13.1
+numpy==1.22.0
 nutritionix==0.2
 packaging==16.8
 pandas==0.20.3
